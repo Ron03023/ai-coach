@@ -3,18 +3,18 @@ import streamlit as st
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-def chat_with_ai(prompt, role="fitness"):
-    if role == "fitness":
-        system_prompt = "You are a friendly and experienced fitness and nutrition coach."
-    else:
-        system_prompt = "You are a helpful productivity coach who helps with tasks and time management."
+def chat_with_ai(user_input, role):
+    client = openai.OpenAI()
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": f"You are a helpful {role} coach."},
+            {"role": "user", "content": user_input}
         ],
         temperature=0.7
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
+
+
+
